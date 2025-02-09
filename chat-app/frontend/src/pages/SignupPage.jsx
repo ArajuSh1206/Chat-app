@@ -1,10 +1,12 @@
 import React from 'react'
 import { useAuthStore } from '../store/useAuthStore';
-import { Mail, MessageSquare, User, Lock, Eye, EyeOff } from 'lucide-react';
+import { Mail, MessageSquare, User, Lock, Eye, EyeOff, Loader2 } from 'lucide-react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom'
+import toast from "react-hot-toast"
 
 import AuthImagePattern from '../components/AuthImagePattern';
+import { Toaster } from "react-hot-toast";
 
 const SignupPage = () => {
 
@@ -16,11 +18,26 @@ const SignupPage = () => {
 
   });
 
-  const { signup, isSigningUp } = useAuthStore ();
+  //using backend method 
+  const { signup, isSigningUp } = useAuthStore();
 
-  const validateForm = () => {};
+  const validateForm = () => {
+    if (!formData.fullName.trim()) return toast.error("Full name is required.");
+    if (!formData.email.trim()) return toast.error("Email is required");
+    if (!/\S+@\S+\.\S+/.test(formData.email)) return toast.error("Invalid email format");
+    if (!formData.password) return toast.error("Password is required.");
+    if (formData.password.length < 6) return toast.error("Password must be atleast 6 characters.")
+
+      return true;
+  };
+
+
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    const success = validateForm()
+    if( success === true ) signup(formData);
+
   };
 
   return (

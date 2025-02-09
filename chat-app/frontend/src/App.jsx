@@ -3,6 +3,7 @@ import Navbar from './components/Navbar'
 import { Routes, Route, Navigate} from "react-router-dom"
 import { useEffect } from 'react';
 import { Loader } from "lucide-react"
+import { Toaster } from 'react-hot-toast';
 
 import HomePage from "./pages/HomePage"
 import SignupPage from "./pages/SignupPage"
@@ -10,7 +11,7 @@ import LoginPage from "./pages/LoginPage"
 import ProfilePage from "./pages/ProfilePage"
 import SettingsPage from "./pages/SettingsPage"
 import { useAuthStore } from "./store/useAuthStore"
-//import { checkAuth } from '../../backend/src/controllers/auth.controllers'
+{/* import { checkAuth } from '../../backend/src/controllers/auth.controllers' */}
 
 
 const App = () => {
@@ -44,6 +45,8 @@ const App = () => {
         <Route path = "/profile" element = { authUser ? <ProfilePage /> : <Navigate to ="/login" /> } />
 
       </Routes>
+
+      <Toaster/> {/*added toaster component*/}
 
 
     </div>
