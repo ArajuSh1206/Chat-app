@@ -12,7 +12,7 @@ import { connectDB } from "./lib/db.js";
 dotenv.config(); 
 
 const app = express();
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 5000;
 
 {/*Increase the body size limit for JSON and URL-encoded data */}
 
@@ -27,7 +27,7 @@ app.use(cors ({
 }))
 
 app.use("/api/auth", authRoute);
-app.use("/api/message", messageRoutes);
+app.use("/api/messages", messageRoutes);
 
 
 connectDB(); 
