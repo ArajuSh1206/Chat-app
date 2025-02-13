@@ -17,7 +17,7 @@ export const getUsersForSidebar = async(req, res) => {
     }
 };
 
-export const getMessage = async (req, res) => {
+export const getMessages = async (req, res) => {
     try {
         const { id: userToChatId } = req.params
         const myId = req.user._id;
@@ -37,14 +37,14 @@ export const getMessage = async (req, res) => {
     }
 };
 
-export const sendMessage = async (req, res) => {
+export const sendMessages = async (req, res) => {
 
     try {
         const { text, image } = req.body;
         const { id: recieverId } = req.params;
         const senderId = req.user._id;
 
-        let imageUrl;
+        let imageURL;
 
         if (image) { //if user sends image, upload to cloudinary
             const uploadResponse = await cloudinary.uploader.upload(image);
@@ -56,7 +56,7 @@ export const sendMessage = async (req, res) => {
             senderId,
             recieverId,
             text,
-            image: imageUrl,
+            image: imageURL,
         });
 
         await newMessage.save();
@@ -71,4 +71,4 @@ export const sendMessage = async (req, res) => {
         res.status(500).json({error: "Internal server error"});
 
     }
-}
+};
