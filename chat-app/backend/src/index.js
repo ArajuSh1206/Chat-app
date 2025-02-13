@@ -6,13 +6,13 @@ import cors from "cors";
 
 import authRoute from "./routes/auth.route.js";
 import messageRoutes from "./routes/message.route.js";
+import { app, server } from "./lib/socket.js";
 
 import { connectDB } from "./lib/db.js";
 
 dotenv.config(); 
 
-const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT;
 
 {/*Increase the body size limit for JSON and URL-encoded data */}
 
@@ -32,7 +32,7 @@ app.use("/api/messages", messageRoutes);
 
 connectDB(); 
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     console.log("server is running on PORT:" + PORT);
 });
 
