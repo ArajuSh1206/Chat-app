@@ -11,6 +11,10 @@ const io = new Server(server, {
     },
 });
 
+//function for realtime messaging
+export function getRecieverSocketId(userId) {
+  return userSocketMap[userId];
+}
 //used to store online users
 const userSocketMap = {}; // {userId: socketId}
 
