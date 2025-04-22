@@ -1,0 +1,210 @@
+CHAT APP - MERN Project
+
+frontend folder
+npm create vite@latest .
+Select react & javascript 
+For vite
+ npm install
+ npm run dev
+
+  VITE v6.0.11  ready in 1404 ms
+  ➜  Local:   http://localhost:5173/
+  ➜  Network: use --host to expose
+  ➜  press h + enter to show help
+
+
+
+backend folder
+npm  innit - y
+npm i express mongoose dotenv jsonwebtoken bcryptjs cookie-parser cloudinary socket.io
+npm i nodemon -D
+Start by working on backend, once above is done, in json file you can see that main server file is index.js. Go ahead and create that.
+const express = require("express") 
+const app = express(); app.listen(5173, () => { 
+console.log("server is running on port 5173"); 
+})
+
+In package.json, change line 6 to 
+
+"scripts": { 
+"dev": "nodemon index.js" 
+}
+Npm run dev
+Now create src folder, move index.js there.
+Create sub folders such as controllers, lib, middleware, models, routes - > auth.route.js
+Update package.json
+backend/src/index.js
+Npm run dev
+Then go onto http://localhost:5173/api/auth/login -> should say something like login route. Similar with /logout & /signup.
+Now create auth.controllers.js in controllers folder to minimize the code in auth.route.js
+All lines repeated can go here to be reused efficiently and to keep the codes clean.
+
+
+
+
+MongoDb - Database
+Create new project - leave default -> add name -> create cluster
+Create db user -> choose connection method
+Add .env file on backend with mongodb and port info. Import them via dot.env on index.js
+DONT put ; in the port env after port number, its case sensitive!
+Now go back to mongoDb and find your url. Copy url into .env and then edit the url. 
+In between /? Add your database name or it’ll just stay as test.
+Eg. mongodb+srv://ariisharma47:63VZeHQ5qJ3UCKnn@cluster0.ew5v3.mongodb.net/chat-db?retryWrites=true&w=majority&appName=Cluster0;
+Now create a db.js file in libs folder. Import mongoose and mongodb info from .env file.
+Be extra careful of syntax error.
+When env file, index.js and db.js files are properly connected, should get response such as 
+server is running on PORT:5173 MongoDB connected : cluster0-shard-00-02.ew5v3.mongodb.net
+Now go back to mongodb site, network access, add ip address, from anywhere, and confirm.
+
+Now under models folder, create user.model.js and download VSCODE great icons extension.
+Now after creating necessary schemas in user.model.js, import them into auth controllers.js using const {userID, email, password}. Import express js onto index.js to run it. 
+(app.use(express.json ()).
+Await functions can only be applies to async function.
+Create salt function, import and add bcrypt there to hash the password. Now time to add jwt.
+Create utils.js file in lib folder, and add create jwt token function. Add important info to .env. It expires in 7 days.
+Go back into auth.controller.js and update if else new user function to integrate jwt tokens.
+After adding required signup functions (saving user to db, hashing the password, and generating JWT token), test the endpoint using postman app.
+
+
+
+
+FUN FACT - Delete accidentally leaked info from github history
+
+Accidentally leaked .env and .gitignore not working. This will delete github cache history for sensitive info and add .env to .gitignore
+
+git rm --cached .env
+
+git commit -m "Remove .env file from repository"
+git push origin main
+
+echo ".env" >> .gitignore
+git add .gitignore
+git commit -m "Add .env to .gitignore"
+git push origin main
+
+git filter-branch --force --index-filter \
+  "git rm --cached --ignore-unmatch .env" \
+  --prune-empty --tag-name-filter cat -- --all
+
+git push origin --force --all
+
+
+
+Postman
+
+Go to Postman, create workspace, blank workspace, and start creating collection (eg. AUTH for authentication). 
+Now add signup, select post function, in body select, raw and jason. Do post = http://localhost:5173/api/auth/signup
+Copy paste this to check if it’s working.
+{ 
+"fullname": "Jimmy John", 
+"email": "jj@gmail.com", 
+"password": "123" 
+}
+Be so extra careful of syntax errors.
+Once becrypt functionalities is used to encode decode to verify password for login in middleware, add error messages for invalid tokens and so on.
+For profile pic function in auth.controller.js, we’ll be using cloudinary.
+https://console.cloudinary.com/pm/c-2f2a66a73d6c67485f4df66bf6ee5a/getting-started
+
+
+
+
+Cloudinary
+
+Use cloudinary to create better UI for add/ delete profile and more.
+Create cloudinary account, sign up and go to dashboard and copy the cloudinary unique user name and put it on .env file.
+Then go to settings, click generate new api key and put API key and API key secret info in the .env file.
+In lib folder, create cloudinary.js file and import cloudinary
+import {vs as cloudinary} from "cloudinary"
+Understand that we can req.user._id directly on update profile function in auth controller bc the protect route function contains update profile and it verifies the user.
+Cloudinary is not a db, it’s just a bucket or holder for our pictures.
+Make sure all files are imported. 
+
+Messages Route
+
+Create a message.model.js in models and create message schema containing sender ID and receiver Id, text, image, and time stamp.
+Then update this info in index.js withj 
+app.use("/api/message", messageRoutes);
+import messageRoutes from "./routes/message.route.js";
+Now create message.route.js in routes.
+Now create message controller where it views all users besides yourself.
+Now create get message & send message function that includes senderid, recieverid, images, and text. Define them in message.controller.js
+Now create get functions for them in messages.auth.routes to request these function for send and receive messages.
+Dont forget to import all files properly! Most errors are syntax and import issues.
+This is mostly all for backends for now.
+
+
+Frontend
+
+Now cd front end & install react 
+ Npm i react-router-dom react-hot-toast
+Now install tailwind.css vite 
+npm install -D tailwindcss@3 postcss autoprefixer
+npx tailwindcss init -p
+This will initialize a tailwind css using the tailwind.config.js file. Copy and paste this below.
+
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+  ],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+}
+Follow through this step. https://v3.tailwindcss.com/docs/guides/vite
+Delete app.css bc we wont use it.
+Delete everything in app.jsx, use face for place holder. (first have to add es7 and add tailwind css extension.)
+In rafce just type “hello”, then npm run dev on front end.
+Now install daisyUi for different ui theme for chats. 
+In tailwind config import daisyui + add daisyui in plugins.
+Change content in tailwind.config to –  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+You can go to daisy ui components then pick anything and paste between a div folder and it should work!
+Import and add browserrouter on your main.jsx file.
+Now create a page folder and create homepage, signup, login, settings, and profile.
+Create component folder then create navbar.jsx. Import this in all of above pages via routes in app.jsx. Connect routes to other pages as well.
+Now install npm i axios zustand
+Note that any jsx from tailwind added in the rafce div container will show up on respective browser.
+
+
+Connecting Backend with Frontend
+
+Make sure your back end is always 5000 or 3000.
+Your back end .env and const port = process.env.port || should contain 5000.
+When using express, make sure your cors port is your front end port. Ie. 
+app.use(express.json());
+app.use(cookieParser());
+app.use(cors ({
+   origin : "http://localhost:5173",
+   credentials : true,
+}))
+
+Make sure youre receiving backend port ie. 5000 in your front end axios file. 
+
+What you did so far was work on the backend.
+Installed react, js, mongoose, bcrypt, cookie-parser, cloudinary, & socket.io.
+Adjusted port in index.js
+Create auth route.js with functionalities for login, signup then later pasted them onto auth controller for cleaner code and only left the routes there.
+.
+
+DaisyUI for changing themes in settings
+
+Import them into index.js & create useThemestore, then import them into app.jsx.
+It’s very simple and easy.
+
+Chat Messages
+
+Create useChatStore & import authMessageControllers function from back end that directly connects to db for messages. (ie. functions such as sendMessages, getMessages, image)
+Connect cloudinary to index.jsx, add cloudinary info to .env.
+In the front end create chatContainer that has everything you need to build chat container (ie. sidebar w user infos, default chat container when no user is selected, user header, message skeleton, & more.
+In messageinput function, integrate functions directly from useChatStore to connect backend to frontend for messages.
+In Chatcontainer, fetch messages from users when a user is selected.
+With all of this and proper ui such as closing chat button, the is almost complete.
+
+Socket.io
+
+Socket.io will basically help users send chat on real time by connecting on top of express and react implementation that we have for messages right now.
+Now we will create socket.js file and  implement socket.io on index.js replacing app.use for local host.
+Now cd front end and install socket.io client (there are two socket.ios).
+
